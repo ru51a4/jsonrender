@@ -59,6 +59,7 @@
     let id = 0;
     let idsNotDisplay = [];
     let notPrint = false;
+    let data;
     let deep = (obj, prevIsArray = false) => {
         for (let key in obj) {
             id++;
@@ -107,7 +108,8 @@
         document.querySelector(".tree").innerHTML = html;
     }
     let init = () => {
-        data = JSON.parse(document.querySelector("textarea").innerHTML);
+        html = '';
+        data = JSON.parse(document.querySelector("textarea").value);
         deep(data);
         document.querySelector(".tree").innerHTML = html;
     }
