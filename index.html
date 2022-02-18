@@ -24,7 +24,11 @@
   "age": 37,
   "mother": {
     "name": "Ольга",
-    "age": 58
+    "age": 58,
+    "mother": {
+        "name": "Ольга",
+        "age": 58
+    }
   },
   "children": [
     "Маша",
@@ -53,31 +57,37 @@
     let lvl = 0;
     let id = 0;
     let idsNotDisplay = [];
+    let notPrint = false;
     let deep = (obj, prevIsArray = false) => {
         for (let key in obj) {
             id++;
+            let currId = id;
             html += `<div style="margin-left:${20 * lvl}" class="item">`
             if ((/boolean|number|string/).test(typeof obj[key])) {
                 if (prevIsArray) {
-                    html += `${obj[key]}`;
+                    html += (notPrint) ? "" : `${obj[key]}`;
                 } else {
-                    html += `${key} - ${obj[key]}`;
+                    html += (notPrint) ? "" : `${key} - ${obj[key]}`;
                 }
             } else {
                 let btn = (idsNotDisplay.includes(id)) ? "+" : "-";
                 if (prevIsArray) {
-                    html += `<span id="${id}" onclick="toogle(event.target)" class="btn btn-primary">${btn}</span>`;
+                    html += (notPrint) ? "" : `<span id="${id}" onclick="toogle(event.target)" class="btn btn-primary">${btn}</span>`;
                 } else {
-                    html += `<span id="${id}" onclick="toogle(event.target)" class="btn btn-primary">${btn}</span> ${key}`;
+                    html += (notPrint) ? "" : `<span id="${id}" onclick="toogle(event.target)" class="btn btn-primary">${btn}</span> ${key}`;
 
                 }
-                if (!idsNotDisplay.includes(Number(id))) {
-                    lvl++;
-                    deep(obj[key], Array.isArray(obj[key]))
-                    lvl--;
+                if (idsNotDisplay.includes(Number(currId))) {
+                    notPrint = true;
                 }
+                lvl++;
+                deep(obj[key], Array.isArray(obj[key]))
+                lvl--;
             }
             html += `</div>`
+            if (idsNotDisplay.includes(Number(currId))) {
+                notPrint = false;
+            }
         }
     }
     let toogle = (el) => {
