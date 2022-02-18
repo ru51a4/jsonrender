@@ -62,6 +62,7 @@
         for (let key in obj) {
             id++;
             let currId = id;
+            let cc = false;
             html += `<div style="margin-left:${20 * lvl}" class="item">`
             if ((/boolean|number|string/).test(typeof obj[key])) {
                 if (prevIsArray) {
@@ -77,15 +78,16 @@
                     html += (notPrint) ? "" : `<span id="${id}" onclick="toogle(event.target)" class="btn btn-primary">${btn}</span> ${key}`;
 
                 }
-                if (idsNotDisplay.includes(Number(currId))) {
+                if (idsNotDisplay.includes(Number(currId)) && !notPrint) {
                     notPrint = true;
+                    cc = true;
                 }
                 lvl++;
                 deep(obj[key], Array.isArray(obj[key]))
                 lvl--;
             }
             html += `</div>`
-            if (idsNotDisplay.includes(Number(currId))) {
+            if (idsNotDisplay.includes(Number(currId)) && cc) {
                 notPrint = false;
             }
         }
